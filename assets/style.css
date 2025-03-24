@@ -1,0 +1,68 @@
+/* Estilos generales */  
+body {  
+    font-family: Arial, sans-serif;  
+    margin: 0;  
+    padding: 0;  
+    background-color: #f4f4f4;  
+}  
+  
+.container {  
+    max-width: 1200px;  
+    margin: 20px auto;  
+    padding: 20px;  
+    background-color: white;  
+    border-radius: 5px;  
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);  
+}  
+  
+/* Estilos para los títulos */  
+h1 {  
+    color: #2c3e50;  
+    text-align: center;  
+    margin-bottom: 30px;  
+    padding: 20px 0;  
+}  
+  
+h2 {  
+    color: #34495e;  
+    margin-bottom: 20px;  
+    border-bottom: 1px solid #eee;  
+    padding-bottom: 10px;  
+}  
+  
+/* Estilos para el dropdown */  
+.Select-control {  
+    border-radius: 4px;  
+    border: 1px solid #ddd;  
+}  
+  
+.Select-placeholder, .Select--single > .Select-control .Select-value {  
+    color: #555;  
+}  
+  
+/* Estilos para la tabla */  
+.dash-table-container {  
+    margin-top: 20px;  
+}  
+  
+/* Header */  
+.header {  
+    background-color: #2c3e50;  
+    color: white;  
+    padding: 10px 0;  
+    text-align: center;  
+}  
+  
+.header h1 {  
+    color: white;  
+    margin: 0;  
+}  
+  
+/* Footer */  
+.footer {  
+    text-align: center;  
+    padding: 20px;  
+    color: #7f8c8d;  
+    font-size: 0.9em;  
+    margin-top: 30px;  
+}  
