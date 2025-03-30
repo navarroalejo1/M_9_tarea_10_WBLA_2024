@@ -1,52 +1,36 @@
-from dash import Dash, html, dcc, Input, Output
-import pandas as pd
-from callbacks import registrar_callbacks
+# app.py
 
-# Cargar los datos reales desde tu archivo CSV
-data = pd.read_csv("data/cmj_lesiones.csv")  # Asegúrate de que el archivo esté en la misma carpeta
+from dash import Dash
+import dash_bootstrap_components as dbc
+from flask import Flask
+from flask_login import current_user
 
-# Inicialización de la aplicación Dash
-app = Dash(__name__)
-server = app.server  # Para despliegue en servidores web como Heroku
+from layout import layout as layout_principal
+from callbacks import register_callbacks
+from auth import login_manager, login_layout
 
-# Layout de la aplicación utilizando contenedores
-app.layout = html.Div([
-    html.H1("Dashboard de Lesiones y Rendimiento Deportivo", style={'textAlign': 'center'}),
+# Inicializar servidor Flask
+flask_app = Flask(__name__)
+flask_app.secret_key = "superclave123"  # Cambia esta clave en producción
 
-    # Contenedor de filtros
-    html.Div([
-        html.Label("Selecciona un equipo:"),
-        dcc.Dropdown(
-            id="team-dropdown",
-            options=[{"label": team, "value": team} for team in sorted(data["Equipo"].unique())],
-            value=sorted(data["Equipo"].unique())[0]
-        ),
-        html.Label("Selecciona un jugador:"),
-        dcc.Dropdown(id="player-dropdown"),
-    ], style={'padding': '10px', 'border': '1px solid #ccc'}),
+# Configurar Flask-Login
+login_manager.init_app(flask_app)
 
-    # Contenedor de tabla
-    html.Div([
-        html.H3("Datos Filtrados"),
-        dcc.Graph(id="table-display", style={"height": "300px"})
-    ], style={'padding': '20px', 'border': '1px solid #ccc'}),
+# Inicializar Dash
+app = Dash(
+    __name__,
+    server=flask_app,
+    external_stylesheets=[dbc.themes.BOOTSTRAP],
+    suppress_callback_exceptions=True
+)
+app.title = "FIBA WBLA 2024"
 
-    # Contenedor de gráfico
-    html.Div([
-        html.H3("Gráfico de Altura CMJ vs Fecha"),
-        html.Label("Filtrar por Momento:"),
-        dcc.RadioItems(
-            id="moment-filter",
-            options=[{"label": momento, "value": momento} for momento in sorted(data["Momento"].unique())],
-            value="Pre",  # Valor por defecto
-            inline=True
-        ),
-        dcc.Graph(id="bar-chart")
-    ], style={'padding': '20px', 'border': '1px solid #ccc'}),
-])
+# Layout condicional según autenticación
+app.layout = lambda: login_layout() if not current_user.is_authenticated else layout_principal
 
-# Registrar callbacks desde el archivo `callbacks.py`
-registrar_callbacks(app, data)
+# Registrar callbacks
+register_callbacks(app)
 
+# Correr app
 if __name__ == "__main__":
     app.run(debug=True)

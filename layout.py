@@ -1,71 +1,40 @@
-from dash import dcc, html, dash_table
+from dash import html, dcc
 import dash_bootstrap_components as dbc
 
-def crear_layout(data):
-    """Crea el diseño de la interfaz gráfica."""
-    
-    return dbc.Container([
-        html.H1("Análisis Deportivo: Altura CMJ y Molestias", className="text-center"),
+layout = html.Div([
+    dcc.Location(id='url', refresh=False),
 
-        # 🔹 Filtros en dos columnas
-        dbc.Row([
-            dbc.Col([
-                html.Label("Filtrar por Equipo"),
-                dcc.Dropdown(
-                    id='team-dropdown',
-                    options=[{'label': equipo, 'value': equipo} for equipo in data['Equipo'].unique()],
-                    placeholder="Selecciona un equipo"
-                ),
-            ], width=6),
+    # 🔹 Barra de navegación mejorada
+    dbc.Navbar(
+        dbc.Container([
+            # 👉 Logo + Nombre
+            dbc.NavbarBrand(
+                html.Div([
+                    html.Img(src="/assets/logo_fiba.jpg", height="70px", style={"marginRight": "10px"}),
+                    html.Span("FIBA WBLA 2024", style={"fontWeight": "bold", "fontSize": "20px", "color": "black"})
+                ], style={"display": "flex", "alignItems": "center"}),
+                href="/"
+            ),
 
-            dbc.Col([
-                html.Label("Filtrar por Jugador"),
-                dcc.Dropdown(id='player-dropdown', placeholder="Selecciona un jugador"),
-            ], width=6),
-        ], className="mb-4"),
+            # 👉 Botón colapsable en dispositivos pequeños
+            dbc.NavbarToggler(id="navbar-toggler"),
 
-        # 🔹 Contenedor 1: Tabla de datos filtrados
-        dbc.Row([
-            dbc.Col([
-                html.H3("📊 Datos Filtrados"),
-                dash_table.DataTable(
-                    id='tabla-datos-filtrados',
-                    columns=[
-                        {"name": "Fecha", "id": "Fecha"},
-                        {"name": "Jugador", "id": "Jugador"},
-                        {"name": "Equipo", "id": "Equipo"},
-                        {"name": "CMJ Intento", "id": "CMJ Intento"},
-                        {"name": "Altura CMJ (cm)", "id": "Altura CMJ (cm)"}
-                    ],
-                    page_size=10,
-                    style_table={'overflowX': 'auto'}
-                ),
-            ], width=12),
-        ], className="mb-4"),
+            # 👉 Menú de navegación
+            dbc.Collapse(
+                dbc.Nav([
+                    dbc.NavItem(dbc.NavLink("Inicio", href="/", style={"color": "Blue"})),
+                    dbc.NavItem(dbc.NavLink("Performance", href="/performance", style={"color": "Black"})),
+                    dbc.NavItem(dbc.NavLink("Lesiones", href="/lesiones", style={"color": "Black"})),
+                    dbc.NavItem(dbc.NavLink("Salir", href="/logout", style={"color": "Red"})),
+                ], className="ms-auto", navbar=True),
+                id="navbar-collapse",
+                navbar=True,
+            ),
+        ]),
+        color="dark",
+        dark=True,
+        sticky="top"
+    ),
 
-        # 🔹 Contenedor 2: Gráfico de barras
-        dbc.Row([
-            dbc.Col([
-                html.H3("📉 Gráfico de Barras"),
-                dcc.Graph(id='grafico-barras'),
-            ], width=12),
-        ], className="mb-4"),
-
-        # 🔹 Contenedor 3: Gráfico de línea con filtro de "Momento"
-        dbc.Row([
-            dbc.Col([
-                html.Label("Filtrar por Momento:"),
-                dcc.RadioItems(
-                    id="moment-filter",
-                    options=[{"label": momento, "value": momento} for momento in sorted(data["Momento"].unique())],
-                    value="Pre",
-                    inline=True
-                ),
-            ], width=3),
-
-            dbc.Col([
-                html.H3("📈 Gráfico de Línea"),
-                dcc.Graph(id='grafico-linea'),
-            ], width=9),
-        ], className="mb-4"),
-    ], fluid=True)
+    html.Div(id="page-content")
+])
