@@ -26,7 +26,7 @@ def load_boxscore():
 def load_lesiones():
     return load_csv("data/cmj_lesiones.csv")
 
-# Alias compatible con lesiones.py
+# cargar lesiones.py
 cargar_cmj_lesiones = load_lesiones
 
 # Cargar equipos como opciones para dropdown
